@@ -77,4 +77,16 @@ router.get('/exam/:examId', protect, authorize('admin'), getExamResultsByExam);
 router.get('/:id', protect, authorize('admin'), getSubmissionById);
 router.put('/rate/:submissionId', rateSubmission);
 
+
+
+
+
+// router.get("/submissions", async (req, res) => {
+
+//   const submissions = await Submission.find();
+
+//   res.json(submissions);
+// });
+
 export default router;
+

@@ -20,12 +20,25 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', res.data.token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-    setUser(res.data);
-  };
+ const login = async (email, password) => {
+
+  const res = await api.post('/auth/login', {
+    email,
+    password
+  });
+
+  // save token
+  localStorage.setItem('token', res.data.token);
+
+  // save user
+  localStorage.setItem(
+    'user',
+    JSON.stringify(res.data.user)
+  );
+
+  // IMPORTANT
+  return res.data;
+};
 
   const register = async (name, email, password, role) => {
     const res = await api.post('/auth/register', { name, email, password, role });

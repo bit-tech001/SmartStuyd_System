@@ -14,6 +14,7 @@ import ViewSubmissions from './pages/admin/ViewSubmissions';
 import RateSubmission from './pages/admin/RateSubmission';
 import ExamResultsList from './pages/admin/ExamResultsList';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import Calendar from './components/common/Calendar';
 import Navbar from './components/common/Navbar';
 // import Profile from './pages/Profile';
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/student/assignment/:id" element={<ProtectedRoute role="student"><SubmitAssignment /></ProtectedRoute>} />
           <Route path="/student/exam/:id" element={<ProtectedRoute role="student"><TakeExam /></ProtectedRoute>} />
           <Route path="/student/exam-result/:id" element={<ProtectedRoute role="student"><ExamResult /></ProtectedRoute>} />
+          <Route path='/calendar' element={<ProtectedRoute role="student"><Calendar /></ProtectedRoute>} />
          {/* <Route
   path="/profile"
   element={
@@ -50,6 +52,7 @@ function App() {
           <Route path="/admin/submissions/:assignmentId" element={<ProtectedRoute role="admin"><ViewSubmissions /></ProtectedRoute>} />
           <Route path="/admin/rate/:submissionId" element={<ProtectedRoute role="admin"><RateSubmission /></ProtectedRoute>} />
           <Route path="/admin/exam-results/:examId" element={<ProtectedRoute role="admin"><ExamResultsList /></ProtectedRoute>} />
+          <Route path='/admin/calendar' element={<ProtectedRoute role="admin"><Calendar /></ProtectedRoute>} />
           
           {/* Default Route */}
           <Route path="/" element={<Login />} />

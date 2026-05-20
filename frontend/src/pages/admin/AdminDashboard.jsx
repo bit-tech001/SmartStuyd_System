@@ -17,12 +17,13 @@ const AdminDashboard = () => {
       try {
         const [assignRes, examRes] = await Promise.all([
           api.get('/assignments'),
-          api.get('/exams')
+          api.get('/exams'),
+          //  api.get('/submissions')
         ]);
         setStats({
           assignments: assignRes.data.length,
           exams: examRes.data.length,
-          submissions: 0, // You can add a submissions count endpoint
+           submissions:0,
           students: 0
         });
       } catch (err) {
@@ -211,3 +212,9 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+
+
+
+
+

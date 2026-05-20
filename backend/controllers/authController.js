@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import bcrypt from "bcryptjs";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -25,22 +26,57 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+
   try {
+
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
-    if (user && (await user.matchPassword(password))) {
-      res.json({
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials"
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    );
+
+    // IMPORTANT
+    res.status(200).json({
+      token,
+      user: {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
-        token: generateToken(user._id),
-      });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
