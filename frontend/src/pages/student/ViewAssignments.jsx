@@ -9,9 +9,12 @@ const ViewAssignments = () => {
 
   useEffect(() => {
     api.get('/assignments')
+    
       .then(res => setAssignments(res.data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
+      
+      
   }, []);
 
   if (loading) {

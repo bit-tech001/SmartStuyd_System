@@ -65,16 +65,16 @@ router.get('/my-exam-results', protect, authorize('student'), getMyExamResults);
 // =============================================
 
 // Admin: Get all submissions for a specific assignment
-router.get('/assignment/:assignmentId', protect, authorize('admin'), getSubmissionsByAssignment);
+router.get('/assignment/:assignmentId', protect, authorize('faculty'), getSubmissionsByAssignment);
 
 // Admin: Rate/grade a submission
 // router.put('/assignment/:id/rate', protect, authorize('admin'), rateSubmission);
 
 // Admin: Get exam results for a specific exam
-router.get('/exam/:examId', protect, authorize('admin'), getExamResultsByExam);
+router.get('/exam/:examId', protect, authorize('faculty'), getExamResultsByExam);
 
 // Admin: Get a single submission by ID (MUST be last to avoid conflicts)
-router.get('/:id', protect, authorize('admin'), getSubmissionById);
+router.get('/:id', protect, authorize('faculty'), getSubmissionById);
 router.put('/rate/:submissionId', rateSubmission);
 
 

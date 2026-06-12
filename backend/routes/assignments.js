@@ -6,8 +6,8 @@ import { createAssignment, getAssignments, getAssignmentById, deleteAssignment }
 const router = express.Router();
 router.route('/')
   .get(protect, getAssignments)
-  .post(protect, authorize('admin'), createAssignment);
+  .post(protect, authorize('faculty'), createAssignment);
 router.route('/:id')
   .get(protect, getAssignmentById)
-  .delete(protect, authorize('admin'), deleteAssignment);
+  .delete(protect, authorize('faculty'), deleteAssignment);
 export default router;

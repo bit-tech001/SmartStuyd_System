@@ -30,17 +30,17 @@ const Sidebar = () => {
   // Expanded Configuration with more icons
   const navigationLinks = [
     { 
-      to: user?.role === 'admin' ? '/admin/dashboard' : '/student/dashboard', 
+      to: user?.role === 'faculty' ? '/faculty/dashboard' : '/student/dashboard', 
       label: "Overview", 
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
-      roles: ['admin', 'student'] 
+      roles: ['faculty', 'student'] 
     },
     { 
       to: "/announcements", 
       label: "Announcements", 
       hasUpdate: true,
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>,
-      roles: ['admin', 'student'] 
+      roles:['faculty', 'student'] 
     },
     { 
       to: "/courses", 
@@ -52,20 +52,35 @@ const Sidebar = () => {
       to: "/materials", 
       label: "Study Materials", 
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>,
-      roles: ['admin', 'student'] 
+      roles:['faculty', 'student'] 
     },
     { 
-      to: "/admin/manage-users", 
+      to: "/faculty/manage-users", 
       label: "User Management", 
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
-      roles: ['admin'] 
+      roles: ['faculty'] 
     },
-    { 
-      to: "/calendar", 
-      label: "Calendar", 
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
-      roles: ['admin', 'student'] 
-    },
+  {
+  to: "/calendar",
+  label: "Calendar",
+  time: "08:48 PM",
+  icon: (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+  ),
+  roles: ["admin", "student"],
+},
     { 
       to: "/assignments", 
       label: "Tasks", 

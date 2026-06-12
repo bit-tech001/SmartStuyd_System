@@ -16,13 +16,16 @@ export const createExam = async (req, res) => {
 };
 
 export const getExams = async (req, res) => {
-  const exams = await Exam.find().populate('createdBy', 'name');
+  const exams = await Exam.find({
+     createdBy: req.user._id
+  }).populate('createdBy', 'name');
   res.json(exams);
 };
 
 export const getExamById = async (req, res) => {
   const exam = await Exam.findById(req.params.id).populate('createdBy', 'name');
-  if (!exam) return res.status(404).json({ message: 'Exam not found' });
+  if (!exam) 
+    return res.status(404).json({ message: 'Exam not found' });
   res.json(exam);
 };
 

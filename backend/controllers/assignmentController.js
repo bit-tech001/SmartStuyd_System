@@ -4,6 +4,7 @@ import Assignment from '../models/Assignment.js';
 export const createAssignment = async (req, res) => {
   try {
     const { title, description, dueDate, questions } = req.body;
+
     const assignment = await Assignment.create({
       title,
       description,
@@ -20,10 +21,14 @@ export const createAssignment = async (req, res) => {
 // Get all assignments (for admin and students)
 export const getAssignments = async (req, res) => {
   try {
-    const assignments = await Assignment.find().populate('createdBy', 'name email');
+    const assignments = await Assignment.find()
+      .populate('createdBy', 'name');
+
     res.json(assignments);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: err.message,
+    });
   }
 };
 

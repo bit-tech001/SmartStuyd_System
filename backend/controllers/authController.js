@@ -25,6 +25,12 @@ export const register = async (req, res) => {
   }
 };
 
+
+export const  makeNotes =  async (req, res) => {
+   
+}
+
+
 export const login = async (req, res) => {
 
   try {

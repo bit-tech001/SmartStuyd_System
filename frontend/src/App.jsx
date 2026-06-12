@@ -45,14 +45,14 @@ function App() {
   }
 /> */}
           {/* Admin Routes */}
-          <Route path="/admin/dashboard" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/admin/assignments" element={<ProtectedRoute role="admin"><ManageAssignments /></ProtectedRoute>} />
-          <Route path="/admin/exams" element={<ProtectedRoute role="admin"><ManageExams /></ProtectedRoute>} />
-          <Route path="/admin/submissions" element={<ProtectedRoute role="admin"><AdminSubmissions /></ProtectedRoute>} />
-          <Route path="/admin/submissions/:assignmentId" element={<ProtectedRoute role="admin"><ViewSubmissions /></ProtectedRoute>} />
-          <Route path="/admin/rate/:submissionId" element={<ProtectedRoute role="admin"><RateSubmission /></ProtectedRoute>} />
-          <Route path="/admin/exam-results/:examId" element={<ProtectedRoute role="admin"><ExamResultsList /></ProtectedRoute>} />
-          <Route path='/admin/calendar' element={<ProtectedRoute role="admin"><Calendar /></ProtectedRoute>} />
+          <Route path="/faculty/dashboard" element={<ProtectedRoute role="faculty"><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/faculty/assignments" element={<ProtectedRoute role="faculty"><ManageAssignments /></ProtectedRoute>} />
+          <Route path="/faculty/exams" element={<ProtectedRoute role="faculty"><ManageExams /></ProtectedRoute>} />
+          <Route path="/faculty/submissions" element={<ProtectedRoute role="faculty"><AdminSubmissions /></ProtectedRoute>} />
+          <Route path="/faculty/submissions/:assignmentId" element={<ProtectedRoute role="faculty"><ViewSubmissions /></ProtectedRoute>} />
+          <Route path="/faculty/rate/:submissionId" element={<ProtectedRoute role="faculty"><RateSubmission /></ProtectedRoute>} />
+          <Route path="/faculty/exam-results/:examId" element={<ProtectedRoute role="faculty"><ExamResultsList /></ProtectedRoute>} />
+          <Route path='/faculty/calendar' element={<ProtectedRoute role="faculty"><Calendar /></ProtectedRoute>} />
           
           {/* Default Route */}
           <Route path="/" element={<Login />} />

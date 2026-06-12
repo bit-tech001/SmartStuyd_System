@@ -156,7 +156,7 @@ const ViewSubmissions = () => {
                         : 'Not Graded'}
                     </div>
                     <button
-                      onClick={() => navigate(`/admin/rate/${submission._id}`)}
+                      onClick={() => navigate(`/faculty/rate/${submission._id}`)}
                       className="btn-primary flex items-center gap-2 whitespace-nowrap"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
