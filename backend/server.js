@@ -16,6 +16,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+app.get("/" , (req,res)=> {
+       res.send({
+        activeStatus:true,
+        error:false,
+       })
+})
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/assignments', assignmentRoutes);
