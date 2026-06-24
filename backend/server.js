@@ -13,10 +13,19 @@ console.log("SERVER KEY:", process.env.GEMINI_API_KEY);
 connectDB();
 
 const app = express();
-app.use(cors({
-    origin: "https://smart-stuyd-system-193m.vercel.app",
-    credentials: true
-}));
+import cors from "cors";
+
+app.use(
+  cors({
+    origin: "https://smart-stuyd-system-gguk.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+
+app.options("*", cors());
 app.use(express.json());
 
 
