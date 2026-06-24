@@ -553,23 +553,23 @@ const Register = () => {
           <div>
                    
                   <h2 className="text-2xl font-bold tracking-tight">Welcome to StudyMS </h2>
-             <div >
+             {/* <div >
              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJLvxqseFFq1JGEpf9dimnJsiKlswlAHJBUQ&s" alt="Registration Illustration" className="w-full h-auto mt-6 opacity-90  rounded-b-full" />
-           </div>
+           </div> */}
             {/* <div className="inline-flex items-center justify-center w-10 h-10 bg-white/10 rounded-xl mb-8 border border-white/10">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
               </svg>
             </div> */}
       
-            <p className="mt-2 text-sm text-primary-100/80 leading-relaxed font-light">
-              Access assignment execution tracking pipelines, secure verified credentials, and complete interactive platform utilities.
-            </p>
+            {/* <p className="mt-0 text-sm text-primary-100/80 leading-relaxed font-light">
+              Access assignment execution tracking 
+            </p> */}
           </div>
          
 
           {/* Minimalist Tab/Step Indicators aligned to bottom of banner */}
-          <div className="space-y-4 mt-8 md:mt-0 border-t border-white/10 pt-6">
+          {/* <div className="space-y-4 mt-8 md:mt-0 border-t border-white/10 pt-6">
             <div className="flex items-center gap-4">
               <div className={`h-1 w-6 rounded-full transition-all duration-300 ${step === 1 ? 'bg-white w-10' : 'bg-white/20'}`}></div>
               <span className={`text-[11px] uppercase tracking-widest font-semibold transition-opacity duration-300 ${step === 1 ? 'opacity-100' : 'opacity-40'}`}>
@@ -582,19 +582,19 @@ const Register = () => {
                 02. Access Keys
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Active Interactive Form Window */}
         <div className="md:col-span-7 p-10 flex flex-col justify-between bg-white">
           
           {/* Top Header Group */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <span className="text-[10px] font-bold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-md inline-block">
               Secure Enrollment Gateway
             </span>
             <h3 className="text-2xl font-bold text-gray-900 mt-2 tracking-tight">Create Account</h3>
-          </div>
+          </div> */}
 
           {/* Dynamic Error Messaging Space */}
           {error && (
