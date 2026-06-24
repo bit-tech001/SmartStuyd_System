@@ -21,22 +21,27 @@ const AssignmentForm = ({ onSubmit }) => {
   try {
     setGenerating(true);
 
-    const res = await api.post(
-      "/ai/generate-assignment",
-      {
-        subject,
-        topic,
-        difficulty,
-        questionCount,
-      }
-    );
+  const res = await api.post(
+  "/ai/generate-assignment",
+  {
+    subject,
+    topic,
+    difficulty,
+    questionCount,
+  }
+);
 
-    console.log(res.data);
+console.log(res.data);
 
-    setTitle(res.data.title || "");
-    setDescription(res.data.description || "");
-    setQuestions(res.data.questions || []);
+const assignment = res.data.assignment;
 
+setTitle(assignment?.title || "");
+setDescription(
+  assignment?.description || ""
+);
+setQuestions(
+  assignment?.questions || []
+);
   } catch (error) {
     console.error(error);
   } finally {

@@ -1,6 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
+import api from '../../services/api';
 
 const Sidebar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -9,15 +10,43 @@ const Sidebar = () => {
 
   const [isOpen, setIsOpen] = useState(window.innerWidth >= 1024);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [hasNewExams, setHasNewExams] = useState(false);
 
+  // Dynamically check for uncompleted exams if the user is a student
+  useEffect(() => {
+    if (!user || user.role !== 'student') return;
 
+    const checkNewExams = async () => {
+      try {
+        const [examsListRes, examResultsRes] = await Promise.all([
+          api.get('/exams'),
+          api.get('/submissions/my-exam-results')
+        ]);
+
+        const availableExams = examsListRes.data || [];
+        const examResults = examResultsRes.data || [];
+
+        // If there's any exam that hasn't been taken yet, trigger the notification indicator
+        const hasUnattended = availableExams.some(
+          (exam) => !examResults.some((result) => result.exam?._id === exam._id)
+        );
+        
+        setHasNewExams(hasUnattended);
+      } catch (err) {
+        console.error('Error verifying exam updates in sidebar:', err);
+      }
+    };
+
+    checkNewExams();
+    const interval = setInterval(checkNewExams, 5000); // Poll gracefully every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   const hideSidebaRoutes = ['/login', '/register'];
-  if(hideSidebaRoutes.includes(location.pathname)) {
+  if (hideSidebaRoutes.includes(location.pathname)) {
     return null;
   }
-     
-
 
   const handleLogout = () => {
     logout();
@@ -27,7 +56,6 @@ const Sidebar = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Expanded Configuration with more icons
   const navigationLinks = [
     { 
       to: user?.role === 'faculty' ? '/faculty/dashboard' : '/student/dashboard', 
@@ -35,35 +63,14 @@ const Sidebar = () => {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>,
       roles: ['faculty', 'student'] 
     },
-    { 
-      to: "/announcements", 
-      label: "Announcements", 
-      hasUpdate: true,
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>,
-      roles:['faculty', 'student'] 
-    },
-    { 
-      to: "/courses", 
-      label: "My Courses", 
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>,
-      roles: ['student'] 
-    },
-    { 
-      to: "/materials", 
-      label: "Study Materials", 
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>,
-      roles:['faculty', 'student'] 
-    },
-    { 
-      to: "/faculty/manage-users", 
-      label: "User Management", 
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
-      roles: ['faculty'] 
-    },
-  {
-  to: "/calendar",
-  label: "Calendar",
-  time: "08:48 PM",
+   {
+  to:
+    user?.role === 'student'
+      ? '/student/profile'
+      : user?.role === 'faculty'
+      ? '/faculty/profile'
+      : '/profile',
+  label: "My Profile",
   icon: (
     <svg
       className="w-5 h-5"
@@ -75,12 +82,43 @@ const Sidebar = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
       />
     </svg>
   ),
-  roles: ["admin", "student"],
+  roles: ['faculty', 'student', 'admin']
 },
+    { 
+      to: "/announcements", 
+      label: "Announcements", 
+      hasUpdate: hasNewExams, // Bind notification flag directly to new exam existence
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>,
+      roles: ['faculty', 'student'] 
+    },
+    { 
+      to: "/courses", 
+      label: "My Courses", 
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>,
+      roles: ['student'] 
+    },
+    { 
+      to: "/materials", 
+      label: "Study Materials", 
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>,
+      roles: ['faculty', 'student'] 
+    },
+    { 
+      to: "/faculty/manage-users", 
+      label: "User Management", 
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>,
+      roles: ['faculty'] 
+    },
+    {
+      to: "/calendar",
+      label: "Calendar",
+      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
+      roles: ["admin", "student"],
+    },
     { 
       to: "/assignments", 
       label: "Tasks", 
@@ -88,12 +126,12 @@ const Sidebar = () => {
       icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
       roles: ['admin', 'student'] 
     },
-    { 
-      to: "admin/exams", 
-      label: "Exams", 
-      icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-      roles: ['admin', 'student'] 
-    },
+    // { 
+    //   to: "/exams", 
+    //   label: "Exams", 
+    //   icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+    //   roles: ['admin', 'student'] 
+    // },
     { 
       to: "/reports", 
       label: "Reports", 

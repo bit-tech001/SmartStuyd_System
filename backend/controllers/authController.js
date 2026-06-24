@@ -1,47 +1,83 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import bcrypt from "bcryptjs";
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import User from "../models/User.js";
+
+const generateToken = (id, role) => {
+  return jwt.sign(
+    {
+      id,
+      role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
+// ================= REGISTER =================
 export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ message: 'User already exists' });
 
-    const user = await User.create({ name, email, password, role });
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user._id),
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Please fill all required fields",
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already exists",
+      });
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role: role || "student",
     });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+
+    res.status(201).json({
+      success: true,
+      token: generateToken(user._id, user.role),
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Register Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-
-export const  makeNotes =  async (req, res) => {
-   
-}
-
-
+// ================= LOGIN =================
 export const login = async (req, res) => {
-
   try {
-
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and Password are required",
+      });
+    }
 
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -51,46 +87,86 @@ export const login = async (req, res) => {
     );
 
     if (!isMatch) {
-      return res.status(400).json({
-        message: "Invalid credentials"
+      return res.status(401).json({
+        message: "Invalid credentials",
       });
     }
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d"
-      }
-    );
-
-    // IMPORTANT
     res.status(200).json({
-      token,
+      success: true,
+      token: generateToken(user._id, user.role),
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
-
   } catch (error) {
+    console.error("Login Error:", error);
 
     res.status(500).json({
-      message: error.message
+      success: false,
+      message: error.message,
     });
   }
 };
 
+// ================= GET PROFILE =================
 export const getMe = async (req, res) => {
-  const user = await User.findById(req.user.id);
-  res.json(user);
+  try {
+    const user = await User.findById(req.user.id).select(
+      "-password"
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("GetMe Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
+// ================= MAKE NOTES =================
+export const makeNotes = async (req, res) => {
+  try {
+    const { title, content } = req.body;
 
+    if (!title || !content) {
+      return res.status(400).json({
+        message: "Title and content are required",
+      });
+    }
 
+    // TODO:
+    // Save note in Notes model
 
+    res.status(201).json({
+      success: true,
+      message: "Note created successfully",
+      note: {
+        title,
+        content,
+      },
+    });
+  } catch (error) {
+    console.error("Make Notes Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

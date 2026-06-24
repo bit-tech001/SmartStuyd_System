@@ -514,7 +514,7 @@ const Register = () => {
     try {
       await register(formData.name, formData.email, formData.password, formData.role);
       if(formData.role == 'faculty')  {
-        navigate('faculty/dashboard');
+        navigate('/faculty/dashboard');
       }else  {
         navigate('student/dashboard');
       }
