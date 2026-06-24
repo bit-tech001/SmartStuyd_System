@@ -13,11 +13,10 @@ console.log("SERVER KEY:", process.env.GEMINI_API_KEY);
 connectDB();
 
 const app = express();
-app.use(cors(
-     {
-        origin: "https://guileless-cajeta-35967c.netlify.app",
-     }
-));
+app.use(cors({
+    origin: "https://smart-stuyd-system-193m.vercel.app",
+    credentials: true
+}));
 app.use(express.json());
 
 
