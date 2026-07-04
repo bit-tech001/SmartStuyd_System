@@ -14,10 +14,12 @@ connectDB();
 
 const app = express();
 
-
 app.use(
   cors({
-    origin: "https://smart-stuyd-system-s98i.vercel.app/",
+    origin: [
+      "http://localhost:3000",
+      "https://smart-stuyd-system-s98i.vercel.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -25,7 +27,6 @@ app.use(
 );
 
 
-app.options("*", cors());
 app.use(express.json());
 
 
