@@ -208,7 +208,7 @@ const Login = () => {
 
   setError('');
 
-  try {
+  try{
 
     setLoading(true);
 
