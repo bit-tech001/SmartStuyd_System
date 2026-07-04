@@ -8,6 +8,44 @@ import fs from "fs"
         api_secret:process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
     });
 
+const uplaodOnCloudinary = async(localFilePath)=>{
+      try{
+            if(!localFilePath) return null;
+            //uplaod
+
+       const response = await  cloudinary.uploader.upload(localFilePath, {
+                resource_type: "auto"
+            })
+            //file has been uploaded 
+             console.log("file uplaod", response.url);
+             return response;
+      } catch(error) {
+          fs.unlinkSync(localFilePath) //remove loacl temp file
+
+          return null;
+      }
+}
+
+
+
+ export default uplaodOnCloudinary
+
+
+    // // Upload an image
+    //  const uploadResult = await cloudinary.uploader
+    //    .upload(
+    //        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
+    //            public_id: 'shoes',
+    //        }
+    //    )
+    //    .catch((error) => {
+    //        console.log(error);
+    //    });
+    
+    // console.log(uploadResult);
+    
+
+
 
 
 
