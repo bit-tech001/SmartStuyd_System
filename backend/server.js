@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://smart-stuyd-system-s98i.vercel.app",
+      "https://smart-stuyd-system-7gw8.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
